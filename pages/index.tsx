@@ -9,8 +9,6 @@ const Home: NextPage = () => {
       <Head>
         <title>Redit clone by RB</title>
       </Head>
-
-      <Header />
     </div>
   )
 }

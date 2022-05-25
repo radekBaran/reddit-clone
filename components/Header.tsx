@@ -15,8 +15,10 @@ import {
   SpeakerphoneIcon,
   VideoCameraIcon,
 } from '@heroicons/react/outline'
+import { signIn, signOut, useSession } from 'next-auth/react'
 
 function Header() {
+  const { data: session } = useSession()
   return (
     <div className="sticky top-0 z-50 flex bg-white px-4 py-2 shadow-md">
       <div className="relative h-10 w-20">
@@ -42,7 +44,7 @@ function Header() {
         <button type="submit" hidden />
       </form>
 
-      <div className="mx-5 flex hidden items-center space-x-2 text-gray-500 lg:inline-flex">
+      <div className="mx-5 hidden items-center space-x-2 text-gray-500 lg:inline-flex">
         <SparklesIcon className="icon" />
         <GlobeIcon className="icon" />
         <VideoCameraIcon className="icon" />
@@ -57,15 +59,34 @@ function Header() {
       </div>
 
       {/* Sign in / Sign out button */}
-      <div
-        className="hidden cursor-pointer items-center space-x-2 
+      {session ? (
+        <div
+          className="hidden cursor-pointer items-center space-x-2 
         border border-gray-100 p-2 lg:flex"
-      >
-        <div className="relative h-5 w-5 flex-shrink-0">
-          <Image src="/reddit-login.png" layout="fill" />
+          onClick={() => signOut()}
+        >
+          <div className="relative h-5 w-5 flex-shrink-0">
+            <Image src="/reddit-login.png" layout="fill" />
+          </div>
+          <div className="flex-1 text-xs">
+            <p className="truncate">{session?.user?.name}</p>
+            <p className="text-gray-400">1 Karma</p>
+          </div>
+
+          <ChevronDownIcon className="h-5 flex-shrink-0" />
         </div>
-        <p className="text-gray-400">Sign In</p>
-      </div>
+      ) : (
+        <div
+          className="hidden cursor-pointer items-center space-x-2 
+        border border-gray-100 p-2 lg:flex"
+          onClick={() => signIn()}
+        >
+          <div className="relative h-5 w-5 flex-shrink-0">
+            <Image src="/reddit-login.png" layout="fill" />
+          </div>
+          <p className="text-gray-400">Sign In</p>
+        </div>
+      )}
     </div>
   )
 }
